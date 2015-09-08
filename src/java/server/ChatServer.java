@@ -7,6 +7,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.Utils;
@@ -22,9 +24,9 @@ public class ChatServer
     private BufferedReader in;
     private PrintWriter out;
     private static boolean keepRunning = true;
-    private String input;
-    private String output;
     private ClientHandler ch;
+    private ConcurrentMap<ClientHandler, String> clients = new ConcurrentHashMap();
+    
     
     private void runServer()
   {
