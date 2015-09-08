@@ -17,19 +17,22 @@ import utils.Utils;
  */
 public class ChatServer
 {
-    ServerSocket serverSocket;
+    private ServerSocket serverSocket;
     private static final Properties properties = Utils.initProperties("server.properties"); 
-    BufferedReader in;
-    PrintWriter out;
-    String input;
-    String output;
+    private BufferedReader in;
+    private PrintWriter out;
+    private static boolean keepRunning = true;
+    private String input;
+    private String output;
+    private ClientHandler ch;
     
     private void runServer()
   {
       
     int port = Integer.parseInt(properties.getProperty("port"));
     String ip = properties.getProperty("serverIp");
-    
+//    int port = 9090;
+//    String ip = "localhost";
     
     Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Sever started. Listening on: "+port+", bound to: "+ip);
     try {
@@ -38,11 +41,26 @@ public class ChatServer
       do {
         Socket socket = serverSocket.accept(); //Important Blocking call
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Connected to a client");        
+        ch = new ClientHandler(socket);
+        ch.start();
+        
       } while (keepRunning);
     } 
     catch (IOException ex) {
       Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-    
+    public static void main(String[] args)
+    {
+        String logFile = properties.getProperty("logFile");
+        Utils.setLogFile(logFile, ChatServer.class.getName());
+        try
+        {
+        new ChatServer().runServer();
+        } finally
+        {
+            Utils.closeLogger(ChatServer.class.getName());
+        }
+        
+    }
 }

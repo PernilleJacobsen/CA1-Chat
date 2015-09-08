@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * @author Lars Mortensen
+ * @author 
  */
 public class Utils
 {
