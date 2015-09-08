@@ -17,9 +17,8 @@ import utils.Utils;
  */
 public class ChatServer
 {
-
     ServerSocket serverSocket;
-    private static Properties properties; 
+    private static final Properties properties = Utils.initProperties("server.properties"); 
     BufferedReader in;
     PrintWriter out;
     String input;
@@ -27,8 +26,10 @@ public class ChatServer
     
     private void runServer()
   {
+      
     int port = Integer.parseInt(properties.getProperty("port"));
     String ip = properties.getProperty("serverIp");
+    
     
     Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Sever started. Listening on: "+port+", bound to: "+ip);
     try {

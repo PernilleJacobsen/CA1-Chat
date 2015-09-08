@@ -16,7 +16,7 @@ import java.util.logging.SimpleFormatter;
 public class Utils
 {
 
-    public static Properties initProperties(String propertyFile) throws IOException
+    public static Properties initProperties(String propertyFile)
     {
         Properties properties = new Properties();
         InputStream is =  null;
@@ -31,7 +31,15 @@ public class Utils
         }
         finally
         {
-          is.close();
+          try
+          {
+            is.close();
+          }
+          catch (IOException ie)
+          {
+              System.out.println(String.format("Could not locate the %1$s file.", propertyFile));
+              return null;
+          }
         }
         return properties;
         
