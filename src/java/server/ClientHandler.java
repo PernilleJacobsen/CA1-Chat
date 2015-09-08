@@ -21,12 +21,19 @@ public class ClientHandler extends Thread
     Scanner input;
     PrintWriter out;
     Socket socket;
+    String userName;
 
     public ClientHandler(Socket socket, String userName) throws IOException
     {
         input = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
+        userName = this.userName;
 
+    }
+    
+    public void sendMSG (String msg)
+    {
+        out.println("MSG#"+userName+"#"+msg);
     }
 
     @Override
@@ -40,7 +47,7 @@ public class ClientHandler extends Thread
             Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
             message = input.nextLine(); //IMPORTANT blocking call
         }
-        out.println("stop");//Echo the stop message back to the client for a nice closedown
+        //out.println("stop");//Echo the stop message back to the client for a nice closedown
         try
         {
             socket.close();

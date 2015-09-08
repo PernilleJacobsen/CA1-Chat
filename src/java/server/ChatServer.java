@@ -32,7 +32,6 @@ public class ChatServer
     private ConcurrentMap<String, ClientHandler> clients = new ConcurrentHashMap();
     String[] splitInput = new String[100];
 
-
     private void runServer()
     {
         int port = Integer.parseInt(properties.getProperty("port"));
@@ -59,8 +58,8 @@ public class ChatServer
                 String command = splitInput[0];
                 if (command.equals("USER"))
                 {
-                    String username = splitInput[1];
-                    clients.put(username, ch = new ClientHandler(socket, username));
+                    String userName = splitInput[1];
+                    clients.put(userName, ch = new ClientHandler(socket, userName));
                     ch.start();
                 } else if (command.equals("MSG"))
                 {
@@ -68,22 +67,24 @@ public class ChatServer
                     if (receivers.length == 1 && receivers[0].equals("*"))
                     {
                         //vi går i clients og henter alle de brugere der er logget på
-                        for(Map.Entry<String, ClientHandler> entry : clients.entrySet())
-                                {
-                                   String receiver = entry.getKey();
-                                   ClientHandler value = entry.getValue();
-                                   out.println("MSG#"+username+"#"+splitInput[2]);
-                                   break;
-                                  
-                                }
-                        
-                        
+                        for (Map.Entry<String, ClientHandler> entry : clients.entrySet())
+                        {
+                            ClientHandler receiver = entry.getValue();
+                            receiver.sendMSG(splitInput[2]);
+                        }
                     } else if (receivers.length == 1)
                     {
-
+                        //VI vil gerne have fat i den clienthandler som navnet i receivers hør sammem
+                        //med.
+                        ClientHandler receiver = clients.get(receivers[0]);
+                        receiver.sendMSG(splitInput[1]);
                     } else
                     {
-
+                        for (String receiver1 : receivers)
+                        {
+                            ClientHandler receiver = clients.get(receiver1);
+                            receiver.sendMSG(splitInput[2]);
+                        }
                     }
 
                 }
@@ -98,9 +99,7 @@ public class ChatServer
     public static void main(String[] args)
     {
         String logFile = properties.getProperty("logFile");
-        Utils
-                .setLogFile(logFile, ChatServer.class
-                        .getName());
+        Utils.setLogFile(logFile, ChatServer.class.getName());
 
         try
         {
