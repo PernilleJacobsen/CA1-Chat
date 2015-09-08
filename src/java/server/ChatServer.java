@@ -58,7 +58,7 @@ public class ChatServer
                 if (command.equals("USER"))
                 {
                     String username = splitInput[1];
-                    clients.put(ch = new ClientHandler(socket), username);
+                    clients.put(ch = new ClientHandler(socket, username), username);
                     ch.start();
                 } else if (command.equals("MSG"))
                 {
