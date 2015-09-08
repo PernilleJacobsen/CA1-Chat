@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -28,8 +29,9 @@ public class ChatServer
     private static boolean keepRunning = true;
     private ClientHandler ch;
     private Socket socket;
-    private ConcurrentMap<ClientHandler, String> clients = new ConcurrentHashMap();
+    private ConcurrentMap<String, ClientHandler> clients = new ConcurrentHashMap();
     String[] splitInput = new String[100];
+
 
     private void runServer()
     {
@@ -58,13 +60,23 @@ public class ChatServer
                 if (command.equals("USER"))
                 {
                     String username = splitInput[1];
-                    clients.put(ch = new ClientHandler(socket, username), username);
+                    clients.put(username, ch = new ClientHandler(socket, username));
                     ch.start();
                 } else if (command.equals("MSG"))
                 {
                     String[] receivers = splitInput[1].split(",");
                     if (receivers.length == 1 && receivers[0].equals("*"))
                     {
+                        //vi går i clients og henter alle de brugere der er logget på
+                        for(Map.Entry<String, ClientHandler> entry : clients.entrySet())
+                                {
+                                   String receiver = entry.getKey();
+                                   ClientHandler value = entry.getValue();
+                                   out.println("MSG#"+username+"#"+splitInput[2]);
+                                   break;
+                                  
+                                }
+                        
                         
                     } else if (receivers.length == 1)
                     {
