@@ -22,7 +22,7 @@ public class ClientHandler extends Thread
     PrintWriter out;
     Socket socket;
 
-    public ClientHandler(Socket socket) throws IOException
+    public ClientHandler(Socket socket, String userName) throws IOException
     {
         input = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
