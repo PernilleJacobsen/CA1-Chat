@@ -29,17 +29,18 @@ public class ChatServer
     private static boolean keepRunning = true;
     private ClientHandler ch;
     private Socket socket;
-    private ChatServer cs;
+    
     private ConcurrentMap<String, ClientHandler> clients = new ConcurrentHashMap();
     String[] splitInput = new String[100];
 
-    public void stopServer()
+    public static void stopServer()
     {
         keepRunning = false;
     }
     
     private void runServer()
     {
+        ChatServer cs;
         int port = Integer.parseInt(properties.getProperty("port"));
         String ip = properties.getProperty("serverIp");
 //    int port = 9090;
@@ -48,6 +49,7 @@ public class ChatServer
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Sever started. Listening on: " + port + ", bound to: " + ip);
         try
         {
+            cs = new ChatServer();
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(ip, port));
 
@@ -62,7 +64,6 @@ public class ChatServer
                 String inputToSplit = in.readLine();
                 splitInput = inputToSplit.split("#");
                 String command = splitInput[0];
-                System.out.println("Her er command: " + command);
                 if (command.equals("USER"))
                 {
                     String userName = splitInput[1];

@@ -46,21 +46,18 @@ public class ClientHandler extends Thread
         String message = input.nextLine(); //IMPORTANT blocking call
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message));
 
-        while (!message.equals("stop"))
+        while (!message.equals("STOP"))
         {
 //            out.println(message.toUpperCase());
             String inputToSplit = message;
             String[] splitInput = inputToSplit.split("#");
             String command = splitInput[0];
-            
             if (command.equals("MSG"))
             {
                 String[] receivers = splitInput[1].split(",");
                 if (receivers.length == 1 && receivers[0].equals("*"))
                 {
                     String msg = splitInput[2];
-                    System.out.println("msg er: " + msg);
-                    System.out.println("er det cs der er tom? " + cs.toString());
                     cs.sendToAll(msg);
                 } else if (receivers.length == 1)
                 {
@@ -76,18 +73,15 @@ public class ClientHandler extends Thread
 //                        receiver.sendMSG(splitInput[2]);
                     }
                 }
-
-            }else if(command.equals("STOP"))
-            {
-                out.print("Bye bye");
-                cs.stopServer();
             }
             Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
             message = input.nextLine(); //IMPORTANT blocking call
         }
-        out.println("stop");//Echo the stop message back to the client for a nice closedown
+        out.println("Bye bye");//Echo the stop message back to the client for a nice closedown
         try
         {
+            //Send userlist og fjern bruger fra map.
+            currentThread().interrupt();
             socket.close();
         } catch (IOException ex)
         {
