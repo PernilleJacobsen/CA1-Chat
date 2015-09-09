@@ -1,4 +1,6 @@
-sep 08, 2015 3:34:23 PM server.ChatServer runServer
+sep 09, 2015 10:10:25 AM server.ChatServer runServer
 INFO: Sever started. Listening on: 9090, bound to: localhost
-sep 08, 2015 3:34:48 PM server.ChatServer runServer
+sep 09, 2015 10:10:34 AM server.ChatServer runServer
 INFO: Connected to a client
+sep 09, 2015 10:10:44 AM server.ClientHandler run
+INFO: Received the message: STOP# 

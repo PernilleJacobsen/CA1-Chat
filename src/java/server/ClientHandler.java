@@ -18,22 +18,26 @@ import java.util.logging.Logger;
  */
 public class ClientHandler extends Thread
 {
+
     Scanner input;
     PrintWriter out;
     Socket socket;
     String userName;
+    ChatServer cs;
 
-    public ClientHandler(Socket socket, String userName) throws IOException
+    public ClientHandler(Socket socket, String userName, ChatServer cs) throws IOException
     {
         input = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
-        userName = this.userName;
+        this.userName = userName;
+        this.cs = cs;
+        this.socket = socket;
 
     }
-    
-    public void sendMSG (String msg)
+
+    public void sendMSG(String msg)
     {
-        out.println("MSG#"+userName+"#"+msg);
+        out.println(msg);
     }
 
     @Override
@@ -41,13 +45,47 @@ public class ClientHandler extends Thread
     {
         String message = input.nextLine(); //IMPORTANT blocking call
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message));
+
         while (!message.equals("stop"))
         {
-            out.println(message.toUpperCase());
+//            out.println(message.toUpperCase());
+            String inputToSplit = message;
+            String[] splitInput = inputToSplit.split("#");
+            String command = splitInput[0];
+            
+            if (command.equals("MSG"))
+            {
+                String[] receivers = splitInput[1].split(",");
+                if (receivers.length == 1 && receivers[0].equals("*"))
+                {
+                    String msg = splitInput[2];
+                    System.out.println("msg er: " + msg);
+                    System.out.println("er det cs der er tom? " + cs.toString());
+                    cs.sendToAll(msg);
+                } else if (receivers.length == 1)
+                {
+                    //Vi vil gerne have fat i den clienthandler som navnet i receivers hør sammem
+                    //med.
+//                    ClientHandler receiver = clients.get(receivers[0]);
+//                    receiver.sendMSG(splitInput[2]);
+                } else
+                {
+                    for (String receiver1 : receivers)
+                    {
+//                        ClientHandler receiver = clients.get(receiver1);
+//                        receiver.sendMSG(splitInput[2]);
+                    }
+                }
+
+            }else if(command.equals("STOP"))
+            {
+                out.print("Bye bye");
+                cs.stopServer();
+            }
             Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
             message = input.nextLine(); //IMPORTANT blocking call
         }
-        //out.println("stop");//Echo the stop message back to the client for a nice closedown
+        out.println("stop");//Echo the stop message back to the client for a nice closedown
         try
         {
             socket.close();
