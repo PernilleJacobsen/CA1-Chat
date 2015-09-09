@@ -43,35 +43,35 @@ public class ClientHandler extends Thread
     @Override
     public void run()
     {
+        System.out.println("3.client size er her: " + cs.sizeofArray());
         String message = input.nextLine(); //IMPORTANT blocking call
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message));
 
-        while (!message.equals("STOP"))
+        while (!message.equals("STOP#"))
         {
-//            out.println(message.toUpperCase());
             String inputToSplit = message;
             String[] splitInput = inputToSplit.split("#");
             String command = splitInput[0];
             if (command.equals("MSG"))
             {
                 String[] receivers = splitInput[1].split(",");
+                System.out.println("recievers size er: " + receivers.length);
                 if (receivers.length == 1 && receivers[0].equals("*"))
                 {
                     String msg = splitInput[2];
+                    System.out.println("4.size er her " + cs.sizeofArray());
                     cs.sendToAll(msg);
                 } else if (receivers.length == 1)
                 {
                     //Vi vil gerne have fat i den clienthandler som navnet i receivers hør sammem
                     //med.
-//                    ClientHandler receiver = clients.get(receivers[0]);
-//                    receiver.sendMSG(splitInput[2]);
+                    String msg = splitInput[2];
+                    String receiver = receivers[0];
+                    cs.sendToOne(msg, receiver);
                 } else
                 {
-                    for (String receiver1 : receivers)
-                    {
-//                        ClientHandler receiver = clients.get(receiver1);
-//                        receiver.sendMSG(splitInput[2]);
-                    }
+                    String msg = splitInput[2];
+                    cs.sendToSome(msg, receivers);
                 }
             }
             Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
@@ -81,7 +81,10 @@ public class ClientHandler extends Thread
         try
         {
             //Send userlist og fjern bruger fra map.
+            cs.removeUser(userName);
             currentThread().interrupt();
+            input.close();
+            out.close();
             socket.close();
         } catch (IOException ex)
         {

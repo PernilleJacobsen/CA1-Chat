@@ -29,27 +29,22 @@ public class ChatServer
     private static boolean keepRunning = true;
     private ClientHandler ch;
     private Socket socket;
-    
-    private ConcurrentMap<String, ClientHandler> clients = new ConcurrentHashMap();
+    private final ConcurrentMap<String, ClientHandler> clients = new ConcurrentHashMap();
     String[] splitInput = new String[100];
 
     public static void stopServer()
     {
         keepRunning = false;
     }
-    
-    private void runServer()
+
+    private void runServer(ChatServer cs)
     {
-        ChatServer cs;
         int port = Integer.parseInt(properties.getProperty("port"));
         String ip = properties.getProperty("serverIp");
-//    int port = 9090;
-//    String ip = "localhost";
 
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Sever started. Listening on: " + port + ", bound to: " + ip);
         try
         {
-            cs = new ChatServer();
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(ip, port));
 
@@ -60,16 +55,17 @@ public class ChatServer
                 out = new PrintWriter(socket.getOutputStream(), true);
                 Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, "Connected to a client");
                 out.println("Connected to a client, welcome");
-                //System.out.println(in.readLine());
                 String inputToSplit = in.readLine();
                 splitInput = inputToSplit.split("#");
                 String command = splitInput[0];
                 if (command.equals("USER"))
                 {
                     String userName = splitInput[1];
-                    clients.putIfAbsent(userName, ch = new ClientHandler(socket, userName, cs));
+                    clients.put(userName, ch = new ClientHandler(socket, userName, cs));
+                    System.out.println("1.client size er her: " + clients.size());
                     out.println("Welcome: " + userName);
                     ch.start();
+                    System.out.println("2.client size er her: " + clients.size());
                 }
 
             }
@@ -86,7 +82,8 @@ public class ChatServer
 
         try
         {
-            new ChatServer().runServer();
+            ChatServer cs = new ChatServer();
+            cs.runServer(cs);
         } finally
         {
             Utils.closeLogger(ChatServer.class.getName());
@@ -97,11 +94,42 @@ public class ChatServer
     public void sendToAll(String msg)
     {
         System.out.println("Hvad er det her: " + msg);
+        System.out.println("5.client size er: " + clients.size());
         for (Map.Entry<String, ClientHandler> entry : clients.entrySet())
         {
+            System.out.println("kan vi komme her ned?");
             ClientHandler receiver = entry.getValue();
-            System.out.println(receiver.userName);
             receiver.sendMSG(msg);
         }
+    }
+
+    public void sendToSome(String msg, String[] receivers)
+    {
+        for (String receiver1 : receivers)
+        {
+            String temp = receiver1;
+            if (clients.containsKey(receiver1))
+            {
+                System.out.println("receiver 1 i client: " + clients.get(temp));
+                ClientHandler receiver = clients.get(temp);
+                receiver.sendMSG(msg);
+            }
+        }
+    }
+
+    public void sendToOne(String msg, String receivers)
+    {
+        ClientHandler receiver = clients.get(receivers);
+        receiver.sendMSG(msg);
+    }
+
+    public void removeUser(String userName)
+    {
+        clients.remove(userName);
+    }
+
+    public int sizeofArray()
+    {
+        return clients.size();
     }
 }
