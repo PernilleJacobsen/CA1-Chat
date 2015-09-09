@@ -43,7 +43,6 @@ public class ClientHandler extends Thread
     @Override
     public void run()
     {
-        System.out.println("3.client size er her: " + cs.sizeofArray());
         String message = input.nextLine(); //IMPORTANT blocking call
         Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message));
 
@@ -59,7 +58,6 @@ public class ClientHandler extends Thread
                 if (receivers.length == 1 && receivers[0].equals("*"))
                 {
                     String msg = splitInput[2];
-                    System.out.println("4.size er her " + cs.sizeofArray());
                     cs.sendToAll(msg);
                 } else if (receivers.length == 1)
                 {
@@ -68,10 +66,16 @@ public class ClientHandler extends Thread
                     String msg = splitInput[2];
                     String receiver = receivers[0];
                     cs.sendToOne(msg, receiver);
-                } else
+                } else if (receivers.length > 1)
                 {
                     String msg = splitInput[2];
                     cs.sendToSome(msg, receivers);
+                } else
+                {
+                    sendMSG("Please use one of the following commands:");
+                    sendMSG("MSG#USER1#...");
+                    sendMSG("MSG#USER1,USER2#...");
+                    sendMSG("MSG#*#...");
                 }
             }
             Logger.getLogger(ChatServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
@@ -82,6 +86,7 @@ public class ClientHandler extends Thread
         {
             //Send userlist og fjern bruger fra map.
             cs.removeUser(userName);
+            cs.userList();
             currentThread().interrupt();
             input.close();
             out.close();

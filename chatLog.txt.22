@@ -1,0 +1,6 @@
+sep. 08, 2015 8:49:15 PM server.ChatServer runServer
+INFO: Sever started. Listening on: 9090, bound to: localhost
+sep. 08, 2015 8:49:25 PM server.ChatServer runServer
+INFO: Connected to a client
+sep. 08, 2015 8:49:49 PM server.ClientHandler run
+INFO: Received the message: MSG#H,I"#HI 

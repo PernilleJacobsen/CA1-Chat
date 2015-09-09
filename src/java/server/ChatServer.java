@@ -47,6 +47,7 @@ public class ChatServer
         {
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(ip, port));
+            int clientsSize = 0;
 
             while (keepRunning)
             {
@@ -62,10 +63,13 @@ public class ChatServer
                 {
                     String userName = splitInput[1];
                     clients.put(userName, ch = new ClientHandler(socket, userName, cs));
-                    System.out.println("1.client size er her: " + clients.size());
                     out.println("Welcome: " + userName);
                     ch.start();
-                    System.out.println("2.client size er her: " + clients.size());
+                }
+                if (clientsSize!=clients.size())
+                {
+                    clientsSize = clients.size();
+                    cs.userList();
                 }
 
             }
@@ -128,8 +132,17 @@ public class ChatServer
         clients.remove(userName);
     }
 
-    public int sizeofArray()
+    public void userList()
     {
-        return clients.size();
+        String temp;
+        String msg = "USERLIST#";
+        ClientHandler receiver = null;
+        for (Map.Entry<String, ClientHandler> entry : clients.entrySet())
+        {
+            temp = entry.getKey() ;
+            receiver = entry.getValue();
+            msg += temp + ", ";
+        }
+        out.println(msg);
     }
 }

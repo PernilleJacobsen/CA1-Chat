@@ -1,0 +1,8 @@
+sep. 09, 2015 5:32:26 PM server.ChatServer runServer
+INFO: Sever started. Listening on: 9090, bound to: localhost
+sep. 09, 2015 5:32:33 PM server.ChatServer runServer
+INFO: Connected to a client
+sep. 09, 2015 5:32:44 PM server.ChatServer runServer
+INFO: Connected to a client
+sep. 09, 2015 5:33:06 PM server.ChatServer runServer
+INFO: Connected to a client
