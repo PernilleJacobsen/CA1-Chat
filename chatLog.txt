@@ -1,32 +1,10 @@
-sep 09, 2015 1:48:56 PM server.ChatServer runServer
+sep 10, 2015 8:38:45 AM server.ChatServer runServer
 INFO: Sever started. Listening on: 9090, bound to: localhost
-sep 09, 2015 1:48:59 PM server.ChatServer runServer
+sep 10, 2015 8:39:07 AM server.ChatServer runServer
 INFO: Connected to a client
-sep 09, 2015 1:49:10 PM server.ChatServer runServer
-INFO: Connected to a client
-sep 09, 2015 1:49:19 PM server.ClientHandler run
-INFO: Received the message: MSG#H#HI 
-sep 09, 2015 1:49:19 PM server.ClientHandler run
-INFO: Received the message: MSG#H#HI 
-sep 09, 2015 1:49:28 PM server.ChatServer runServer
-INFO: Connected to a client
-sep 09, 2015 1:49:47 PM server.ChatServer runServer
-INFO: Connected to a client
-sep 09, 2015 1:50:06 PM server.ClientHandler run
-INFO: Received the message: MSG#H,I#HEKKELLO 
-sep 09, 2015 1:50:06 PM server.ClientHandler run
-INFO: Received the message: MSG#H,I#HEKKELLO 
-sep 09, 2015 1:50:45 PM server.ClientHandler run
-INFO: Received the message: MSG#I,#HEJ 
-sep 09, 2015 1:51:00 PM server.ClientHandler run
-INFO: Received the message: MSG#I,H#ALOHA 
-sep 09, 2015 1:51:18 PM server.ClientHandler run
-INFO: Received the message: MSG#*#HELLO WORLD 
-sep 09, 2015 1:58:51 PM server.ChatServer runServer
-INFO: Connected to a client
-sep 09, 2015 1:59:06 PM server.ClientHandler run
-INFO: Received the message: MSG#H#HI 
-sep 09, 2015 1:59:06 PM server.ClientHandler run
-INFO: Received the message: MSG#H#HI 
-sep 09, 2015 1:59:09 PM server.ClientHandler run
-INFO: Closed a Connection
+sep 10, 2015 8:39:13 AM server.ClientHandler run
+INFO: Received the message: HI 
+sep 10, 2015 8:39:13 AM server.ClientHandler run
+INFO: Received the message: HI 
+sep 10, 2015 8:39:20 AM server.ClientHandler run
+INFO: Received the message: MSG#H#HUI 
